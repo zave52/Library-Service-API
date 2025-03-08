@@ -21,7 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data: dict) -> get_user_model():
         """Create users with encrypted password."""
-        return get_user_model().objects.create(**validated_data)
+        return get_user_model().objects.create_user(**validated_data)
 
     def update(
         self, instance: get_user_model(), validated_data: dict
