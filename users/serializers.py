@@ -20,13 +20,13 @@ class UserSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data: dict) -> get_user_model():
-        """Create user with encrypted password."""
+        """Create users with encrypted password."""
         return get_user_model().objects.create(**validated_data)
 
     def update(
         self, instance: get_user_model(), validated_data: dict
     ) -> get_user_model():
-        """Update user model with encrypted password."""
+        """Update users model with encrypted password."""
 
         password = validated_data.get("password", None)
         user = super().update(instance, validated_data)
