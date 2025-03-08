@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "is_staff")
         extra_kwargs = {
             "password": {
-                "write_only_field": True,
+                "write_only": True,
                 "min_length": 5,
                 "style": {"input_password": "password"},
                 "label": _("Password"),
