@@ -1,12 +1,17 @@
+from django.db import transaction
 from django.db.models import QuerySet
-from rest_framework import viewsets, mixins, serializers
+from django.http import HttpRequest, HttpResponse
+from rest_framework import viewsets, mixins, serializers, status
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from borrowings.models import Borrowing
 from borrowings.serializers import (
     BorrowingListSerializer,
     BorrowingRetrieveSerializer,
-    BorrowingSerializer
+    BorrowingSerializer,
+    BorrowingReturnSerializer
 )
 
 
@@ -24,6 +29,8 @@ class BorrowingViewSet(
             return BorrowingListSerializer
         if self.action == "retrieve":
             return BorrowingRetrieveSerializer
+        if self.action == "borrowing_return":
+            return BorrowingReturnSerializer
         return BorrowingSerializer
 
     def get_queryset(self) -> QuerySet:
@@ -47,3 +54,26 @@ class BorrowingViewSet(
             queryset = queryset.filter(user=self.request.user)
 
         return queryset
+
+    @action(
+        methods=["POST"],
+        detail=True,
+        permission_classes=(IsAuthenticated,),
+        url_path="return"
+    )
+    def borrowing_return(
+        self, request: HttpRequest, pk: int, *args, **kwargs
+    ) -> HttpResponse:
+        borrowing = self.get_object()
+
+        serializer = self.get_serializer(
+            borrowing,
+            data=request.data,
+            partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+
+        with transaction.atomic():
+            serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
