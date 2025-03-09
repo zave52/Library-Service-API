@@ -42,7 +42,7 @@ class BorrowingSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 
-class BorrowingListSerializer(BorrowingSerializer):
+class BorrowingListSerializer(serializers.ModelSerializer):
     book = serializers.SlugRelatedField(
         read_only=True,
         slug_field="title"
