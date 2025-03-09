@@ -118,5 +118,3 @@ Access interactive API documentation at:
 | GET    | `/borrowings/?user_id=...&is_active=...` | Get borrowings with optional filters for user ID and active status |
 | GET    | `/borrowings/<id>/`                      | Get detailed information about a specific borrowing                |
 | POST   | `/borrowings/<id>/return/`               | Return a borrowed book (increases book inventory by 1)             |
-
-```
